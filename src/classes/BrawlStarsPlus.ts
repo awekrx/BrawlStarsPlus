@@ -1,5 +1,4 @@
-import BrawlStars, { Battle, BattleLog } from "brawlstars-api-nodejs";
-import BrawlStarsClient from "brawlstars-api-nodejs/lib/classes/BrawlStarsClient";
+import BrawlStars, { Battle, BattleLog, Client } from "brawlstars-api-nodejs";
 
 import Data from "./Data";
 
@@ -12,7 +11,7 @@ interface IResults {
 export default class BrawlStarsPlus {
     private instance!: this;
     private db!: DataBase;
-    private client!: BrawlStarsClient;
+    private client!: Client;
     private tags: string[] = [];
     private matches: string[] = [];
     private results: IResults = {};
@@ -89,10 +88,10 @@ export default class BrawlStarsPlus {
             this.index++;
             this.client
                 .battleLog(tag)
-                .then(async (player) => {
+                .then(async (player: BattleLog) => {
                     this.sliceInfoFromData(tag, player);
                 })
-                .catch(async (err) => {
+                .catch(async (err: any) => {
                     this.tags.splice(this.tags.indexOf(tag), 1);
                     this.db.deleteTag(this.tags[this.index]);
                 });
